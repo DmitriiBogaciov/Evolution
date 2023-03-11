@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from deap import algorithms, base, creator, tools
 
-creator.create("FitnessMax", base.Fitness, weights=(0.5,))
+creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 
 creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -50,8 +50,10 @@ print(hof)
 
 fig, ax = plt.subplots()
 
-ax.plot(range(0, (NGEN+1)*2, 2), mean, label="mean")
 ax.plot(range(0, (NGEN+1)*2, 2), maximum, label="max")
+
+ax.axhline(y=0.5, color='black', linestyle='-')
+
 ax.set_xlim(1, NGEN)
 ax.set_ylim(0, 1)
 ax.legend()
