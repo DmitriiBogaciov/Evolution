@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from deap import algorithms, base, creator, tools
 
-creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+creator.create("FitnessMax", base.Fitness, weights=(0.1,))
 
 creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -17,11 +17,13 @@ toolbox.register("individual", tools.initRepeat, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 pop = toolbox.population(n=10)
 print(pop)
-
+surface = 0.5
 
 def evaluate(individual):
     fitness = sum(individual)
-    return fitness / IND_SIZE,
+    fitness = fitness / IND_SIZE
+    fitness += random.uniform(-1, 0.7)
+    return fitness,
 
 
 toolbox.register("evaluate", evaluate)
@@ -32,7 +34,7 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 
 NGEN = 10
 CXPB = 0.7
-MUTPB = 0.8
+MUTPB = 0.2
 
 s = tools.Statistics(key=lambda ind: ind.fitness.values)
 s.register("mean", np.mean)
@@ -50,11 +52,16 @@ print(hof)
 
 fig, ax = plt.subplots()
 
-ax.plot(range(0, (NGEN+1)*2, 2), maximum, label="max")
+ax.plot(range(0, (NGEN+1)*2, 2), mean, color='green', alpha=0.5, label="mean")
 
-ax.axhline(y=0.5, color='black', linestyle='-')
+ax.axhline(y=surface, color='blue', linestyle='-')
+
+# Закрашиваем область под линией до максимального значения
+ax.fill_between(range(0, (NGEN+1)*2, 2), mean, 0, color='green', alpha=0.5)
+ax.fill_between(range(0, (NGEN+1)*2, 2), 0, surface, color='blue', alpha=0.2)
 
 ax.set_xlim(1, NGEN)
 ax.set_ylim(0, 1)
 ax.legend()
 plt.show()
+
