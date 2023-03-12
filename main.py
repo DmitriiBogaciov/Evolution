@@ -10,7 +10,7 @@ creator.create("Individual", list, fitness=creator.FitnessMax)
 IND_SIZE = 10
 toolbox = base.Toolbox()
 
-toolbox.register("attr_float", random.randint, 0, 1)
+toolbox.register("attr_float", random.uniform, 0, 1)
 toolbox.register("individual", tools.initRepeat, creator.Individual,
                  toolbox.attr_float, n=IND_SIZE)
 
@@ -33,8 +33,8 @@ toolbox.register("mutate", tools.mutUniformInt, low=0, up=1, indpb=0.05)
 toolbox.register("select", tools.selTournament, tournsize=3)
 
 NGEN = 10
-CXPB = 0.7
-MUTPB = 0.2
+CXPB = 0.9
+MUTPB = 0.1
 
 s = tools.Statistics(key=lambda ind: ind.fitness.values)
 s.register("mean", np.mean)
@@ -47,6 +47,8 @@ pop = toolbox.population(n=10)
 finalpop, logbook = algorithms.eaSimple(pop, toolbox, cxpb=CXPB, mutpb=MUTPB, ngen=NGEN, stats=s, halloffame=hof)
 
 mean, maximum = logbook.select("mean", "max")
+best_pop = None
+best_fitness = 0
 
 print(hof)
 
